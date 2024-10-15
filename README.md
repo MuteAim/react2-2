@@ -3,9 +3,9 @@
 
 ### 동적 라우팅 상세
 
-*-Path Parameter는 Routes 컴포넌트에서 다음과 같이 정의된다.
-*:는 Path Parameter가 올 것임을 의미한다.
-*id는 해당 Path Parameter 의 이름을 의미한다. 변수 명을 짓듯이 임의의 이름을 지정해줄 수 있다. ex):productId
+- Path Parameter는 Routes 컴포넌트에서 다음과 같이 정의된다.
+- :는 Path Parameter가 올 것임을 의미한다.
+- id는 해당 Path Parameter 의 이름을 의미한다. 변수 명을 짓듯이 임의의 이름을 지정해줄 수 있다. ex):productId
 
 - [slag] (단일 동적 경로 : Dynamic Route Segment)
 
