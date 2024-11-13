@@ -1,4 +1,340 @@
 # React2 3-2반 202030331 지현수
+
+## 11주차 메모 2024/11/06
+### UI 라이브러리
+
+- UI 라이브러리, 프레임워크, 유틸리티는 필수 X
+
+- 생산성 향상 및 UI 일관성
+
+- **chakra UI**
+
+  - 버튼, Modal, 입력 등 다양한 내장 컴포넌트 제공
+
+  - dark mode, light mode 지원
+
+  - 타입스크립트로 작성되어 있음
+
+  ```sh
+  npm i @chakra-ui/react @emotion/react
+  npx @chakra-ui/cli snippet add
+  ```
+
+- **TailwindCSS**
+
+  - 다른 프레임워크와는 다르게 CSS 규칙만을 제공
+
+  - JS 모듈이나 react 컴포넌트를 제공하지 않기 때문에 필요한 경우 직접 만들어서 사용해야 함
+
+  - 변수값을 조정하여 개성있는 디자인을 만들 수 있음. 디자인 자유도가 높다.
+
+  - dark mode 및 light mode를 쉽게 적용할 수 있다.
+
+  - 빌드 시점에 사용하지 않는 클래스는 제거 되기 때문에 높은 수준의 최적화를 지원
+
+  - CSS 클래스의 접두사를 활용해서 모바일, 데스크톱, 태블릿 화면에서 원하는 규칙을 지정할 수 있음
+
+    - 예시코드 `<div className="sm:hidden md:flex lg:inline-block"></div>`
+
+    > sm => @media (min-width: 640px) { ... }  
+    > md => @media (min-width: 768px) { ... }  
+    > lg => @media (min-width: 1024px) { ... }  
+    > xl => @media (min-width: 1280px) { ... }  
+    > 2xl => @media (min-width: 1536px) { ... }
+
+  - 현재는 [TailwindCSS](https://tailwindcss.com/)와 [TailwindUI](https://tailwindui.com/)를 지원함
+
+- **Headless UI**
+
+  - TailwindCSS를 만든 Tailwind Labs 팀의 무료 오픈소스 프로젝트
+
+  - TailwindCSS는 웹 컴포넌트 안에서 사용할 수 있는 CSS클래스만 제공함
+
+  - Headless UI는 CSS클래스를 제공하는 것이 아닌 동적 컴포넌트만 제공한다.
+
+  ```sh
+  npm install @headlessui/react
+  ```
+
+## 10주차 메모 24-10-30
+
+### CSS와 내장 스타일링 메서드
+
+- **Styled JSX**
+
+  - Styled JSX는 CSS-in-JS 라이브러리이다.
+
+  - 내장 모듈이기에 설치가 필요 없음
+
+    ```jsx
+    "use client";
+
+    export default function StyledJsx2() {
+      return (
+        <>
+          <button className="button">버튼</button>
+          <span>Span Tag</span>
+          <style jsx>
+            {`
+              span {
+                background-color: blue;
+                color: white;
+                font-size: 1rem;
+              }
+            `}
+          </style>
+        </>
+      );
+    }
+    ```
+
+  - 단점
+
+    - IDE나 코드 편집기 등 개발 도구에 대한 지원이 부족
+
+    - 문법 하이라이팅, 자동 완성, 린트(lint)기능을 제공 X
+
+    - 코드 내에서 CSS에 대한 의존성이 점점 커지기 때문에 앱 번들도 커지고 느려짐
+
+- **CSS Module**
+
+  - CSS-in-JS의 단점을 보완하기 위한 방법이다.
+
+  - .module.css 로 끝나는 파일에서 CSS클래스를 가져와서 사용
+
+  - 변환한 객체에서 모든 키는 클래스 이름을 의미함
+
+  - 클래스들은 컴포넌트 스코프를 가진다.
+
+  - 생성된 HTML 태그를 보면 class 가 고유한 값을 갖는다.
+
+    ```jsx
+    /* styles/globals.css */
+
+    .foo {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      grid-row-start: 2;
+      color: yellow;
+    }
+    ```
+
+    ```jsx
+    /* layout.js */
+
+    import "./styles/globals.css";
+    ```
+
+    ```jsx
+    /* page.js */
+
+    "use client";
+
+    export default function Root() {
+      return (
+        <div className="foo">
+          <h1>Root Page</h1>
+        </div>
+      );
+    }
+    ```
+
+  - CSS Module 상속
+
+    ```jsx
+    /* styles/my.module.css */
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      grid-row-start: 2;
+      color: red;
+    }
+
+    .main1 {
+      composes: main;
+      color: #cacaff;
+    }
+    ```
+
+    ```jsx
+    /* page.js */
+
+    import styles from "./styles/my.module.css";
+
+    export default function Root() {
+      return (
+        <div className={styles.main1}>
+          <h1>Root Page</h1>
+        </div>
+      );
+    }
+    ```
+
+- **SASS**
+
+- Next에서 기본으로 지원하는 전 처리기
+
+- 단 패키지 설치가 필요함 ( npm install sass )
+
+- SASS 및 SCSS(Sassy CSS) 문법으로 CSS Module을 만들고 사용할 수 있다.
+
+- styles/Home.module.css 파일 이름을 styles/Home.module.scss로 바꿔주면 된다.
+
+  ```scss
+  // styles/foo.module.scss
+
+  $foo: red;
+
+  .bar {
+    font: 500;
+    color: aqua;
+  }
+  ```
+
+  ```jsx
+  import styles from "./styles/foo.module.scss";
+
+  export default function Root() {
+    return (
+      <>
+        <div className="foo">
+          <h1>Home_foo</h1>
+        </div>
+
+        <div className={styles.bar}>
+          <h1>Home_foo1</h1>
+        </div>
+      </>
+    );
+  }
+  ```
+
+## 9주차 메모 24-10-23
+
+### 누적 레이아웃 이동 (CLS: Cumulative Layout Shift)
+
+- 정적 자원 중 이미지 파일은 SEO에 많은 영향을 미친다.
+
+- 다운로드 시간이 많이 걸리고, 렌더링 후에 레이아웃이 변경되는 등 UX에 영향을 미친다.
+
+- Image 컴포넌트를 사용하면 해결
+
+- lazy loading : 이미지 로드 시점을 필요할 때까지 지연시키는 기술
+
+- 이미지 사이즈 최적화로 사이즈를 1/10이하로 줄여줌
+
+- placeholder를 제공
+
+
+### Image Component
+
+#### local 방식
+
+- 예시 코드
+
+```jsx
+import Image from "next/image";
+import foo from "/public/images/leaf-6760484_1920.jpg";
+
+export default function About() {
+  return (
+    <>
+      <h1>About page</h1>
+      {/* 경로 방식 */}
+      <Image
+        src="/images/corn-9064747_640.jpg"
+        alt="옥수수"
+        width={400}
+        height={500}
+      />
+      <Image
+        src="/images/corn-9064747_640.jpg"
+        alt="옥수수"
+        width={400}
+        height={500}
+        layout="responsive"
+      />
+      {/* import 방식 */}
+      <Image src={foo} alt="단풍" width={400} height={500} />
+    </>
+  );
+}
+```
+
+- Image 컴포넌트 사용 시 주의 사항
+
+  - width, height는 필수이다. (layout="fill"을 사용 시에는 생략)
+
+  - layout="responsive" 는 브라우저 크기에 맞게 가변한다.
+
+### Remote 방식
+
+- Pixabay와 같은 외부 이미지를 사용하려면 next.config.mjs 설정이 필요
+
+- 수정된 코드
+
+```mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.pixabay.com",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+- 예시 코드
+
+```jsx
+import Image from "next/image";
+
+export default function About() {
+  return (
+    <>
+      <h1>About page</h1>
+      {/* Remote 방식*/}
+      <Image
+        src="https://cdn.pixabay.com/photo/2023/11/03/12/22/toadstool-8362901_1280.jpg"
+        width={300}
+        height={500}
+        alt="버섯"
+      />
+    </>
+  );
+}
+```
+
+### 코드 구성과 데이터 불러오기
+
+- 프로젝트를 시작할 때 확장과 복잡도에 대비 해야한다.
+
+- 코드를 더 효율적으로 구성하기 위해 **아토믹 디자인 원칙**에 따라 디렉토리를 구성한다.
+
+  - atoms : 가장 기본적인 컴포넌트 관리
+
+  - molecules : atoms에 속한 컴포넌트 여러 개를 조합하여 복잡한 구조로 만든 컴포넌트 관리
+
+  - organisms : molecules와 atoms를 섞어서 더 복잡하게 만든 컴포넌트 관리
+
+  - templates : 위의 모든 컴포넌트를 어떻게 배치 결정해서 사용자가 접근할 수 있는 페이지
+## 8주차 중간고사
+
+## 7주차 강의 - 보강
+
 ## 6주차 강의내용
 ### Page Project Layout - app
 - app.jsx는 서버에 요청할 때 가장 먼저 실행되는 컴포넌트입니다.
